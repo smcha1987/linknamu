@@ -29,8 +29,8 @@ export default function PopupBody({ content }: { content: PopupContent }) {
         </section>
       ))}
 
-      <section className="flex flex-col gap-2 border-t border-black/10 pt-5 dark:border-white/15">
-        <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400">참고 사이트</h3>
+      <section className="flex flex-col gap-2 border-t border-line pt-5">
+        <h3 className="text-sm font-bold text-muted">참고 사이트</h3>
         <ul className="flex flex-col gap-1.5">
           {content.references.map((ref) => (
             <li key={ref.url}>
@@ -50,7 +50,7 @@ export default function PopupBody({ content }: { content: PopupContent }) {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400">참고 이미지</h3>
+        <h3 className="text-sm font-bold text-muted">참고 이미지</h3>
         {content.images.map((image) => (
           <Image
             key={image.src}
@@ -59,7 +59,7 @@ export default function PopupBody({ content }: { content: PopupContent }) {
             width={image.width}
             height={image.height}
             sizes="(max-width: 640px) 100vw, 32rem"
-            className="h-auto w-full rounded-xl border border-black/10 dark:border-white/15"
+            className="h-auto w-full rounded-xl border border-line"
           />
         ))}
       </section>

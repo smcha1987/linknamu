@@ -39,10 +39,10 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
       onClick={(e) => {
         if (e.target === dialogRef.current) onClose();
       }}
-      className="m-auto max-h-[85dvh] w-[min(100%-2rem,32rem)] overflow-hidden rounded-2xl bg-background p-0 text-foreground shadow-2xl backdrop:bg-black/60"
+      className="m-auto max-h-[85dvh] w-[min(100%-2rem,32rem)] overflow-hidden rounded-3xl border border-line bg-surface-strong p-0 text-foreground shadow-2xl backdrop:bg-slate-950/50 backdrop:backdrop-blur-sm"
     >
       <div className="flex max-h-[85dvh] flex-col">
-        <header className="flex items-start gap-3 border-b border-black/10 px-5 py-4 dark:border-white/15">
+        <header className="flex items-start gap-3 border-b border-line px-5 py-4">
           <h2 id={titleId} className="flex-1 break-keep text-lg font-bold leading-snug">
             {title}
           </h2>
@@ -50,7 +50,7 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
             type="button"
             onClick={onClose}
             aria-label="닫기"
-            className="-m-1 rounded-full p-1 text-2xl leading-none text-gray-500 transition hover:bg-black/5 hover:text-foreground focus-visible:outline-2 focus-visible:outline-emerald-500 dark:hover:bg-white/10"
+            className="-m-1 rounded-full p-1 text-2xl leading-none text-muted transition hover:bg-line hover:text-foreground focus-visible:outline-2 focus-visible:outline-accent"
           >
             <span aria-hidden="true">×</span>
           </button>
