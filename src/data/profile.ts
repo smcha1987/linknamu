@@ -27,7 +27,6 @@ export const links: LinkItem[] = [
     popup: lguBoraPopup,
   },
   { id: "schedule", kind: "link", icon: "📅", title: "아영이네의 일정관리", url: "/calendar" },
-  { id: "email", kind: "link", icon: "✉️", title: "이메일", url: "mailto:hello@example.com" },
 ];
 
 export function isLinkId(id: unknown): id is string {
