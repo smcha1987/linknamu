@@ -1,10 +1,10 @@
 // 사진관 업로드 규칙. 브라우저(즉시 안내)와 서버(실제 강제)가 함께 사용
 
 export const ALLOWED_PHOTO_TYPES = ["image/gif", "image/png", "image/jpeg", "image/webp"];
-export const MAX_PHOTO_BYTES = 2 * 1024 * 1024; // 2MB
+export const MAX_PHOTO_BYTES = 4 * 1024 * 1024; // 4MB
 
-// Vercel Blob 무료(Hobby) 저장 용량 1GB를 넘지 않도록 전체 장수 상한 (400장 × 2MB = 최대 800MB)
-export const MAX_PHOTOS = 400;
+// Vercel Blob 무료(Hobby) 저장 용량 1GB를 넘지 않도록 전체 장수 상한 (200장 × 4MB = 최대 800MB)
+export const MAX_PHOTOS = 200;
 
 // 정적 사진(src/assets/gallery)이 들어가는 목차 이름
 export const DEFAULT_ALBUM = "기본";

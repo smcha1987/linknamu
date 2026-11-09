@@ -32,7 +32,7 @@ export default function PhotoUploadForm({ albums, initialAlbum, onUploaded }: Pr
     setFiles(ok);
     setStatus(
       bad.length
-        ? { tone: "error", text: `제외됨: ${bad.map((f) => f.name).join(", ")} (gif·png·jpg·webp, 2MB 이하만 가능)` }
+        ? { tone: "error", text: `제외됨: ${bad.map((f) => f.name).join(", ")} (gif·png·jpg·webp, 4MB 이하만 가능)` }
         : null,
     );
   };
@@ -131,7 +131,7 @@ export default function PhotoUploadForm({ albums, initialAlbum, onUploaded }: Pr
         disabled={busy}
         className="text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-accent/15 file:px-3 file:py-2 file:text-sm file:font-medium"
       />
-      <p className="text-xs opacity-60">gif · png · jpg · webp, 한 장에 2MB 이하</p>
+      <p className="text-xs opacity-60">gif · png · jpg · webp, 한 장에 4MB 이하</p>
 
       <button
         type="submit"

@@ -3,7 +3,7 @@ import { albumFromPath, ALLOWED_PHOTO_TYPES, MAX_PHOTO_BYTES, MAX_PHOTOS } from 
 import { getPhotos, registerPhoto } from "@/lib/photos";
 
 // 브라우저 → Vercel Blob 직접 업로드용 토큰 발급
-// 형식과 2MB 제한은 토큰에 담겨 Blob 서버가 강제하므로 브라우저 검사를 우회해도 막힘
+// 형식과 4MB 제한은 토큰에 담겨 Blob 서버가 강제하므로 브라우저 검사를 우회해도 막힘
 export async function POST(request: Request) {
   let body: HandleUploadBody;
   try {
@@ -37,6 +37,7 @@ export async function POST(request: Request) {
     });
     return Response.json(json);
   } catch (error) {
+    console.error("[api/photos/upload] failed to issue upload token", error);
     return Response.json({ error: (error as Error).message }, { status: 400 });
   }
 }

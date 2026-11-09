@@ -61,7 +61,7 @@ export async function registerPhoto(rawUrl: unknown): Promise<PhotoDoc | string>
   const album = albumFromPath(meta.pathname);
   if (!album) return "사진 경로가 올바르지 않습니다";
   if (!ALLOWED_PHOTO_TYPES.includes(meta.contentType)) return "지원하지 않는 형식입니다";
-  if (meta.size > MAX_PHOTO_BYTES) return "2MB를 넘는 사진입니다";
+  if (meta.size > MAX_PHOTO_BYTES) return "4MB를 넘는 사진입니다";
 
   const doc: PhotoDoc = {
     album,
