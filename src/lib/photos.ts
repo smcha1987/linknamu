@@ -1,4 +1,4 @@
-import { head } from "@vercel/blob";
+import { del, head } from "@vercel/blob";
 import type { ObjectId } from "mongodb";
 import { albumFromPath, ALLOWED_PHOTO_TYPES, MAX_PHOTO_BYTES, type Album } from "@/data/photoRules";
 import { getDb } from "./mongodb";
@@ -74,4 +74,16 @@ export async function registerPhoto(rawUrl: unknown): Promise<PhotoDoc | string>
   const photos = await getPhotos();
   await photos.updateOne({ pathname: doc.pathname }, { $setOnInsert: doc }, { upsert: true });
   return doc;
+}
+
+// 등록된 사진을 Blob 저장소와 DB에서 삭제. DB에 없는 URL이면 false
+// Blob을 먼저 지워서, 실패해도 DB 기록이 남아 다시 시도할 수 있게 함
+export async function deletePhoto(rawUrl: unknown): Promise<boolean> {
+  if (typeof rawUrl !== "string") return false;
+  const photos = await getPhotos();
+  const doc = await photos.findOne({ url: rawUrl });
+  if (!doc) return false;
+  await del(doc.url);
+  await photos.deleteOne({ _id: doc._id });
+  return true;
 }

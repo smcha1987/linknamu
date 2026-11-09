@@ -16,6 +16,8 @@ export default function PhotoGallery() {
   const [current, setCurrent] = useState(DEFAULT_ALBUM);
   const [showUpload, setShowUpload] = useState(false);
   const [loadError, setLoadError] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null); // 삭제 중인 사진 URL
+  const [deleteError, setDeleteError] = useState(false);
 
   // 크게 보는 중인 사진 번호. null이면 라이트박스 닫힘
   const [index, setIndex] = useState<number | null>(null);
@@ -50,6 +52,29 @@ export default function PhotoGallery() {
   const prev = () => index !== null && show(index - 1);
   const next = () => index !== null && show(index + 1);
 
+  const removePhoto = async (url: string) => {
+    if (!window.confirm("이 사진을 삭제할까요? 되돌릴 수 없어요.")) return;
+    setDeleting(url);
+    setDeleteError(false);
+    try {
+      const res = await fetch("/api/photos", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      // 404는 이미 삭제된 사진이므로 목록만 새로고침
+      if (!res.ok && res.status !== 404) throw new Error(String(res.status));
+      // 마지막 사진을 지우면 목차도 사라지므로 기본 목차로 이동
+      if (count === 1) setCurrent(DEFAULT_ALBUM);
+      await loadAlbums();
+    } catch (error) {
+      console.error("[PhotoGallery] failed to delete photo", error);
+      setDeleteError(true);
+    } finally {
+      setDeleting(null);
+    }
+  };
+
   // 모달 위에 한 겹 더 띄우기 위해 라이트박스도 showModal()로 최상위 레이어에 올림
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -75,6 +100,7 @@ export default function PhotoGallery() {
               onClick={() => {
                 setCurrent(name);
                 setIndex(null);
+                setDeleteError(false);
               }}
               className={`shrink-0 rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition focus-visible:outline-2 focus-visible:outline-accent ${
                 current === name ? "bg-accent font-semibold text-white" : "bg-line/60 hover:bg-line"
@@ -111,6 +137,12 @@ export default function PhotoGallery() {
         </p>
       )}
 
+      {deleteError && (
+        <p role="alert" className="mb-3 text-sm text-red-500">
+          사진을 삭제하지 못했어요. 잠시 후 다시 시도해 주세요.
+        </p>
+      )}
+
       {count === 0 ? (
         <p className="py-10 text-center text-sm opacity-60">아직 사진이 없어요. 첫 사진을 올려 보세요!</p>
       ) : (
@@ -120,7 +152,7 @@ export default function PhotoGallery() {
               key={photo.key}
               // 사진이 하나씩 순서대로 떠오르는 등장 효과
               style={{ animationDelay: `${Math.min(i, 12) * 70}ms` }}
-              className="motion-safe:animate-[gallery-rise_0.55s_cubic-bezier(0.22,1,0.36,1)_both]"
+              className="relative motion-safe:animate-[gallery-rise_0.55s_cubic-bezier(0.22,1,0.36,1)_both]"
             >
               <button
                 type="button"
@@ -156,6 +188,18 @@ export default function PhotoGallery() {
                   </span>
                 </span>
               </button>
+              {/* 업로드 사진만 삭제 가능. 모바일에는 hover가 없어 항상 표시 */}
+              {typeof photo.src === "string" && (
+                <button
+                  type="button"
+                  onClick={() => void removePhoto(photo.key)}
+                  disabled={deleting !== null}
+                  aria-label={`${photo.alt} 삭제`}
+                  className="absolute top-1.5 right-1.5 grid h-9 w-9 place-items-center rounded-full bg-black/60 text-lg text-white shadow transition hover:bg-red-600 focus-visible:outline-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <span aria-hidden="true">{deleting === photo.key ? "…" : "×"}</span>
+                </button>
+              )}
             </li>
           ))}
         </ul>
